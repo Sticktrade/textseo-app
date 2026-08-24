@@ -4,7 +4,7 @@ import streamlit as st
 
 # Configuración visual
 st.set_page_config(
-    page_title="TextSEO — Contador de Palabras, Densidad SEO y Formateador",
+    page_title="TextSEO — Contador, Densidad SEO, Legibilidad y Meta Descripción",
     page_icon="📝",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -42,12 +42,11 @@ st.markdown(
         color: #475569;
         margin-bottom: 1.5rem;
         font-weight: 400;
-        max-width: 800px;
+        max-width: 850px;
         margin-left: auto;
         margin-right: auto;
     }
 
-    /* Badges con los beneficios exactos */
     .features-badges {
         display: flex;
         justify-content: center;
@@ -75,40 +74,40 @@ st.markdown(
         box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
     }
     .stTextArea textarea:focus {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 0 2px rgba(37,99,235,0.2) !important;
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 2px rgba(79,70,229,0.2) !important;
     }
 
-    .compact-banner {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-left: 4px solid #2563eb;
-        border-radius: 10px;
-        padding: 12px 20px;
-        margin-top: 10px;
+    /* Banner de Afiliación llamativo de alto contraste */
+    .vibrant-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #d946ef 100%);
+        border-radius: 12px;
+        padding: 14px 22px;
+        margin-top: 12px;
         margin-bottom: 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.22);
     }
-    .compact-banner-text {
-        font-size: 0.92rem;
-        color: #334155;
+    .vibrant-banner-text {
+        font-size: 0.95rem;
+        color: #ffffff !important;
+        font-weight: 500;
     }
-    .compact-banner-text strong {
-        color: #0f172a;
+    .vibrant-banner-text strong {
+        color: #fef08a !important;
     }
-    .compact-btn {
-        background-color: #eff6ff;
-        color: #2563eb !important;
-        padding: 8px 16px;
+    .vibrant-btn {
+        background-color: #ffffff;
+        color: #4f46e5 !important;
+        padding: 9px 18px;
         border-radius: 8px;
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.88rem;
+        font-weight: 700;
         text-decoration: none;
-        border: 1px solid #bfdbfe;
         white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .metric-card {
@@ -146,20 +145,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Cabecera directa
+# Cabecera
 st.markdown('<div class="title-text">TextSEO</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="subtitle-text">Pega tu texto abajo y calcula al instante la <b>extensión exacta</b>, detecta <b>palabras repetidas para SEO</b>, <b>limpia el formato</b> y genera la <b>URL (slug)</b> de tu artículo.</div>',
+    '<div class="subtitle-text">Pega tu texto para obtener al instante <b>recuento preciso</b>, <b>densidad de palabras clave</b>, <b>nivel de legibilidad SEO</b>, <b>meta descripción automatizada</b> y <b>formato limpio</b>.</div>',
     unsafe_allow_html=True,
 )
 
-# Badges explicativos directos
+# Badges explicativos
 st.markdown(
     """
     <div class="features-badges">
-        <span class="badge-item">📊 Conteo & Tiempo de lectura</span>
-        <span class="badge-item">🎯 Porcentaje de Palabras Clave</span>
-        <span class="badge-item">🔄 Corrector de Formato</span>
+        <span class="badge-item">📊 Conteo & Tiempo de Lectura</span>
+        <span class="badge-item">🎯 Densidad de Palabras Clave</span>
+        <span class="badge-item">📖 Índice de Legibilidad SEO</span>
+        <span class="badge-item">🏷️ Meta Descripción para Google</span>
         <span class="badge-item">🔗 Generador de Slug Web</span>
     </div>
 """,
@@ -174,14 +174,14 @@ text_input = st.text_area(
     label_visibility="collapsed",
 )
 
-# Banner sutil
+# Banner destacado de alta conversión
 st.markdown(
     f"""
-    <div class="compact-banner">
-        <div class="compact-banner-text">
-            💡 <strong>Sugerencia:</strong> ¿Necesitas redactar borradores largos desde cero? Genera artículos completos con IA.
+    <div class="vibrant-banner">
+        <div class="vibrant-banner-text">
+            ⚡ <strong>¿Escribiendo un artículo largo?</strong> Genera borradores completos optimizados para SEO en segundos con IA.
         </div>
-        <a href="{URL_AFILIADO_IA}" target="_blank" class="compact-btn">Probar herramienta →</a>
+        <a href="{URL_AFILIADO_IA}" target="_blank" class="vibrant-btn">Probar IA Gratis →</a>
     </div>
 """,
     unsafe_allow_html=True,
@@ -284,6 +284,7 @@ if text_input:
     sentences = max(1, sentences) if total_words > 0 else 0
     reading_time = round(total_words / 200, 1)
 
+    # Tarjetas métricas
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.markdown(
@@ -313,12 +314,16 @@ if text_input:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    tab1, tab2, tab3 = st.tabs([
-        "🎯 Palabras Clave & Densidad SEO",
+    # 5 Herramientas avanzadas organizadas por pestañas
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "🎯 Densidad SEO",
+        "📖 Legibilidad & Estilo",
+        "🏷️ Meta Descripción",
         "🔄 Formateador Rápido",
-        "🔗 Generador de Slug URL",
+        "🔗 Slug URL",
     ])
 
+    # 1. Densidad
     with tab1:
         filtered_words = [
             w for w in words if w not in STOP_WORDS_ES and len(w) > 2
@@ -336,10 +341,66 @@ if text_input:
                 )
         else:
             st.info(
-                "Escribe o pega un texto más largo para mostrar el análisis de densidad SEO."
+                "Escribe un texto más largo para generar el informe de densidad de palabras clave."
             )
 
+    # 2. Nueva función avanzada: Legibilidad y Estilo SEO
     with tab2:
+        avg_words_per_sentence = (
+            round(total_words / sentences, 1) if sentences > 0 else 0
+        )
+        col_l1, col_l2 = st.columns(2)
+
+        with col_l1:
+            st.write("### Promedio de palabras por oración")
+            st.markdown(
+                f'<div class="metric-card"><div class="metric-value">{avg_words_per_sentence}</div><div class="metric-label">Palabras / Oración</div></div>',
+                unsafe_allow_html=True,
+            )
+
+        with col_l2:
+            st.write("### Nivel de Complejidad SEO")
+            if avg_words_per_sentence <= 15:
+                st.success(
+                    "🟢 **Fácil de leer:** Estructura óptima para retener usuarios y mejorar el SEO móvil."
+                )
+            elif avg_words_per_sentence <= 24:
+                st.warning(
+                    "🟡 **Dificultad Media:** Considera dividir algunas oraciones largas con puntos seguidos."
+                )
+            else:
+                st.error(
+                    "🔴 **Complejo:** Frases demasiado largas. Acórtalas para evitar abandonos de página."
+                )
+
+    # 3. Nueva función avanzada: Generador de Meta Descripción
+    with tab3:
+        st.write("### Snippet de Meta Descripción Sugerido (150-160 caracteres)")
+        # Extrae los primeros 155 caracteres respetando palabras completas
+        raw_snippet = text_input.replace("\n", " ").strip()
+        meta_desc = (
+            raw_snippet[:155].rsplit(" ", 1)[0] + "..."
+            if len(raw_snippet) > 155
+            else raw_snippet
+        )
+
+        st.text_area(
+            "Copia tu Meta Descripción lista para Google:",
+            meta_desc,
+            height=80,
+        )
+        length_meta = len(meta_desc)
+        if 130 <= length_meta <= 160:
+            st.caption(
+                f"✅ Longitud ideal: **{length_meta} caracteres** (Encaja perfectamente en los resultados de Google)."
+            )
+        else:
+            st.caption(
+                f"ℹ️ Longitud actual: **{length_meta} caracteres** (Recomendado entre 130 y 160 caracteres)."
+            )
+
+    # 4. Formateador
+    with tab4:
         col_btn1, col_btn2, col_btn3, col_btn4 = st.columns(4)
         if col_btn1.button("Convertir a MAYÚSCULAS", use_container_width=True):
             st.text_area(
@@ -370,7 +431,8 @@ if text_input:
                 label_visibility="collapsed",
             )
 
-    with tab3:
+    # 5. Slug URL
+    with tab5:
         raw_slug = text_input.split("\n")[0]
         slug = re.sub(r"[^\w\s-]", "", raw_slug.lower())
         slug = re.sub(r"[-\s]+", "-", slug).strip("-")
