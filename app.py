@@ -10,8 +10,10 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Enlace de afiliado
-URL_AFILIADO_IA = "https://writesonic.com?via=tu_id"
+# Enlaces de afiliados (Sustituye por tus enlaces reales)
+URL_AFILIADO_IA_WRITING = "https://writesonic.com?via=tu_id"  # Generador de artículos
+URL_AFILIADO_PARAPHRASE = "https://quillbot.com?via=tu_id"  # Reescritura y corrección
+URL_AFILIADO_SEO_TOOL = "https://surferseo.com?via=tu_id"  # Optimización SEO avanzada
 
 # Estilos CSS
 st.markdown(
@@ -78,37 +80,58 @@ st.markdown(
         box-shadow: 0 0 0 2px rgba(79,70,229,0.2) !important;
     }
 
-    /* Banner de Afiliación llamativo de alto contraste */
-    .vibrant-banner {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #d946ef 100%);
-        border-radius: 12px;
-        padding: 14px 22px;
-        margin-top: 12px;
+    /* Grid de 3 Banners de Afiliación */
+    .affiliate-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin-top: 14px;
         margin-bottom: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.22);
     }
-    .vibrant-banner-text {
-        font-size: 0.95rem;
-        color: #ffffff !important;
-        font-weight: 500;
-    }
-    .vibrant-banner-text strong {
-        color: #fef08a !important;
-    }
-    .vibrant-btn {
+
+    .aff-card {
         background-color: #ffffff;
-        color: #4f46e5 !important;
-        padding: 9px 18px;
-        border-radius: 8px;
-        font-size: 0.88rem;
+        border-radius: 12px;
+        padding: 16px 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .aff-card-1 { border-top: 4px solid #6366f1; }
+    .aff-card-2 { border-top: 4px solid #10b981; }
+    .aff-card-3 { border-top: 4px solid #f59e0b; }
+
+    .aff-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .aff-desc {
+        font-size: 0.83rem;
+        color: #64748b;
+        margin-bottom: 14px;
+        line-height: 1.35;
+    }
+
+    .aff-btn {
+        text-align: center;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 0.82rem;
         font-weight: 700;
         text-decoration: none;
-        white-space: nowrap;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        display: block;
     }
+
+    .aff-btn-1 { background-color: #eeef2; color: #4f46e5 !important; background: #eef2ff; border: 1px solid #c7d2fe; }
+    .aff-btn-2 { background-color: #ecfdf5; color: #059669 !important; border: 1px solid #a7f3d0; }
+    .aff-btn-3 { background-color: #fffbeb; color: #d97706 !important; border: 1px solid #fde68a; }
 
     .metric-card {
         background-color: #ffffff;
@@ -174,14 +197,31 @@ text_input = st.text_area(
     label_visibility="collapsed",
 )
 
-# Banner destacado de alta conversión
+# 3 Banners de Afiliación Complementarios
 st.markdown(
     f"""
-    <div class="vibrant-banner">
-        <div class="vibrant-banner-text">
-            ⚡ <strong>¿Escribiendo un artículo largo?</strong> Genera borradores completos optimizados para SEO en segundos con IA.
+    <div class="affiliate-grid">
+        <div class="aff-card aff-card-1">
+            <div>
+                <div class="aff-title">✨ Generador de Contenido IA</div>
+                <div class="aff-desc">Redacta artículos de más de 1.500 palabras optimizados para SEO en 30 segundos.</div>
+            </div>
+            <a href="{URL_AFILIADO_IA_WRITING}" target="_blank" class="aff-btn aff-btn-1">Probar Generador IA →</a>
         </div>
-        <a href="{URL_AFILIADO_IA}" target="_blank" class="vibrant-btn">Probar IA Gratis →</a>
+        <div class="aff-card aff-card-2">
+            <div>
+                <div class="aff-title">✍️ Corrector & Paráfrasis</div>
+                <div class="aff-desc">Reescribe oraciones, elimina pliegos de plagio y mejora la fluidez gramatical.</div>
+            </div>
+            <a href="{URL_AFILIADO_PARAPHRASE}" target="_blank" class="aff-btn aff-btn-2">Reescribir Texto →</a>
+        </div>
+        <div class="aff-card aff-card-3">
+            <div>
+                <div class="aff-title">🚀 Auditoría SEO Avanzada</div>
+                <div class="aff-desc">Analiza tu texto frente al top 10 de Google para garantizar la primera posición.</div>
+            </div>
+            <a href="{URL_AFILIADO_SEO_TOOL}" target="_blank" class="aff-btn aff-btn-3">Auditar para Google →</a>
+        </div>
     </div>
 """,
     unsafe_allow_html=True,
@@ -314,7 +354,6 @@ if text_input:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 5 Herramientas avanzadas organizadas por pestañas
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "🎯 Densidad SEO",
         "📖 Legibilidad & Estilo",
@@ -323,7 +362,6 @@ if text_input:
         "🔗 Slug URL",
     ])
 
-    # 1. Densidad
     with tab1:
         filtered_words = [
             w for w in words if w not in STOP_WORDS_ES and len(w) > 2
@@ -344,7 +382,6 @@ if text_input:
                 "Escribe un texto más largo para generar el informe de densidad de palabras clave."
             )
 
-    # 2. Nueva función avanzada: Legibilidad y Estilo SEO
     with tab2:
         avg_words_per_sentence = (
             round(total_words / sentences, 1) if sentences > 0 else 0
@@ -373,10 +410,8 @@ if text_input:
                     "🔴 **Complejo:** Frases demasiado largas. Acórtalas para evitar abandonos de página."
                 )
 
-    # 3. Nueva función avanzada: Generador de Meta Descripción
     with tab3:
         st.write("### Snippet de Meta Descripción Sugerido (150-160 caracteres)")
-        # Extrae los primeros 155 caracteres respetando palabras completas
         raw_snippet = text_input.replace("\n", " ").strip()
         meta_desc = (
             raw_snippet[:155].rsplit(" ", 1)[0] + "..."
@@ -399,7 +434,6 @@ if text_input:
                 f"ℹ️ Longitud actual: **{length_meta} caracteres** (Recomendado entre 130 y 160 caracteres)."
             )
 
-    # 4. Formateador
     with tab4:
         col_btn1, col_btn2, col_btn3, col_btn4 = st.columns(4)
         if col_btn1.button("Convertir a MAYÚSCULAS", use_container_width=True):
@@ -431,7 +465,6 @@ if text_input:
                 label_visibility="collapsed",
             )
 
-    # 5. Slug URL
     with tab5:
         raw_slug = text_input.split("\n")[0]
         slug = re.sub(r"[^\w\s-]", "", raw_slug.lower())
