@@ -1,6 +1,7 @@
 import re
 from collections import Counter
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Configuración visual
 st.set_page_config(
@@ -10,12 +11,16 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# Inicializar estados
+if "formatted_output" not in st.session_state:
+    st.session_state.formatted_output = ""
+
 # Enlaces de afiliados
 URL_AFILIADO_IA_WRITING = "https://writesonic.com?via=tu_id"
 URL_AFILIADO_PARAPHRASE = "https://quillbot.com?via=tu_id"
 URL_AFILIADO_SEO_TOOL = "https://surferseo.com?via=tu_id"
 
-# Estilos CSS
+# Estilos CSS corregidos y forzados
 st.markdown(
     """
     <style>
@@ -75,9 +80,34 @@ st.markdown(
         font-size: 1rem !important;
         box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
     }
-    .stTextArea textarea:focus {
-        border-color: #4f46e5 !important;
-        box-shadow: 0 0 0 2px rgba(79,70,229,0.2) !important;
+
+    /* Corrección global para botones de Streamlit (Alto contraste y sin caracteres oscuros) */
+    div[data-testid="stButton"] button {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+        transition: all 0.2s ease !important;
+    }
+    div[data-testid="stButton"] button:hover {
+        background-color: #f1f5f9 !important;
+        border-color: #2563eb !important;
+        color: #2563eb !important;
+    }
+
+    /* Estilo exclusivo para el botón principal "Revisar" */
+    div[data-testid="stButton"] button[kind="primary"] {
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-size: 1.05rem !important;
+    }
+    div[data-testid="stButton"] button[kind="primary"]:hover {
+        background-color: #1d4ed8 !important;
+        color: #ffffff !important;
     }
 
     /* Grid de 3 Banners de Afiliación */
@@ -86,7 +116,7 @@ st.markdown(
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 16px;
         margin-top: 14px;
-        margin-bottom: 24px;
+        margin-bottom: 28px;
     }
 
     .aff-card {
@@ -154,11 +184,11 @@ st.markdown(
 st.markdown(
     """
     <div class="features-badges">
-        <span class="badge-item">📊 Conteo & Tiempo de Lectura</span>
-        <span class="badge-item">🎯 Densidad de Palabras Clave</span>
-        <span class="badge-item">📖 Legibilidad & Complejidad</span>
-        <span class="badge-item">🏷️ Meta Descripción SEO</span>
-        <span class="badge-item">🔗 Slug de URL Clean</span>
+        <span class="badge-item">Conteo & Tiempo de Lectura</span>
+        <span class="badge-item">Densidad de Palabras Clave</span>
+        <span class="badge-item">Legibilidad & Complejidad</span>
+        <span class="badge-item">Meta Descripción SEO</span>
+        <span class="badge-item">Slug de URL Clean</span>
     </div>
 """,
     unsafe_allow_html=True,
@@ -172,54 +202,122 @@ text_input = st.text_area(
     label_visibility="collapsed",
 )
 
-# Botón de revisión
-btn_revisar = st.button("🔍 Revisar Texto", type="primary", use_container_width=True)
-
-# 3 Banners de Afiliación
-st.markdown(
-    f"""
-    <div class="affiliate-grid">
-        <div class="aff-card aff-card-1">
-            <div>
-                <div class="aff-title">✨ Generador de Contenido IA</div>
-                <div class="aff-desc">Crea artículos completos de 1.500 palabras optimizados para SEO en 30 segundos.</div>
-            </div>
-            <a href="{URL_AFILIADO_IA_WRITING}" target="_blank" class="aff-btn aff-btn-1">Probar Generador IA →</a>
-        </div>
-        <div class="aff-card aff-card-2">
-            <div>
-                <div class="aff-title">✍️ Corrector & Paráfrasis</div>
-                <div class="aff-desc">Reescribe oraciones, elimina plagio y mejora la fluidez gramatical.</div>
-            </div>
-            <a href="{URL_AFILIADO_PARAPHRASE}" target="_blank" class="aff-btn aff-btn-2">Reescribir Texto →</a>
-        </div>
-        <div class="aff-card aff-card-3">
-            <div>
-                <div class="aff-title">🚀 Auditoría SEO Avanzada</div>
-                <div class="aff-desc">Analiza tu escrito frente al top 10 de Google para asegurar el primer puesto.</div>
-            </div>
-            <a href="{URL_AFILIADO_SEO_TOOL}" target="_blank" class="aff-btn aff-btn-3">Auditar para Google →</a>
-        </div>
-    </div>
-""",
-    unsafe_allow_html=True,
-)
+# Botón centrados en la pantalla
+col_b1, col_b2, col_b3 = st.columns([1, 1, 1])
+with col_b2:
+    btn_revisar = st.button(
+        "Revisar Texto", type="primary", use_container_width=True
+    )
 
 STOP_WORDS_ES = set([
-    "de", "la", "que", "el", "en", "y", "a", "los", "del", "se", "las", "por", "un", "para", "con", "no", "una",
-    "su", "al", "lo", "como", "más", "pero", "sus", "le", "ya", "o", "este", "sí", "porque", "esta", "son",
-    "entre", "está", "cuando", "muy", "sin", "sobre", "también", "me", "hasta", "hay", "donde", "quien",
-    "desde", "todo", "nos", "durante", "todos", "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante",
-    "ellos", "e", "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro", "otras", "otra", "él", "tanto",
-    "esa", "estos", "mucho", "quienes", "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas",
-    "algo", "nosotros"
+    "de",
+    "la",
+    "que",
+    "el",
+    "en",
+    "y",
+    "a",
+    "los",
+    "del",
+    "se",
+    "las",
+    "por",
+    "un",
+    "para",
+    "con",
+    "no",
+    "una",
+    "su",
+    "al",
+    "lo",
+    "como",
+    "más",
+    "pero",
+    "sus",
+    "le",
+    "ya",
+    "o",
+    "este",
+    "sí",
+    "porque",
+    "esta",
+    "son",
+    "entre",
+    "está",
+    "cuando",
+    "muy",
+    "sin",
+    "sobre",
+    "también",
+    "me",
+    "hasta",
+    "hay",
+    "donde",
+    "quien",
+    "desde",
+    "todo",
+    "nos",
+    "durante",
+    "todos",
+    "uno",
+    "les",
+    "ni",
+    "contra",
+    "otros",
+    "ese",
+    "eso",
+    "ante",
+    "ellos",
+    "e",
+    "esto",
+    "mí",
+    "antes",
+    "algunos",
+    "qué",
+    "unos",
+    "yo",
+    "otro",
+    "otras",
+    "otra",
+    "él",
+    "tanto",
+    "esa",
+    "estos",
+    "mucho",
+    "quienes",
+    "nada",
+    "muchos",
+    "cual",
+    "poco",
+    "ella",
+    "estar",
+    "estas",
+    "algunas",
+    "algo",
+    "nosotros",
 ])
 
-# Procesar análisis solo al pulsar el botón "Revisar"
+# Procesar análisis solo al pulsar "Revisar"
 if btn_revisar:
     if not text_input.strip():
         st.warning("Por favor, introduce un texto antes de pulsar 'Revisar'.")
     else:
+        # Ancla e inyección JS para auto-scrolling suave a los resultados
+        st.markdown(
+            '<div id="resultados-anchor"></div>', unsafe_allow_html=True
+        )
+        components.html(
+            """
+            <script>
+                var element = window.parent.document.getElementById('resultados-anchor');
+                if (element) {
+                    element.scrollIntoView({behavior: 'smooth'});
+                }
+            </script>
+        """,
+            height=0,
+        )
+
         words = re.findall(r"\b\w+\b", text_input.lower())
         total_words = len(words)
         total_chars = len(text_input)
@@ -230,24 +328,77 @@ if btn_revisar:
 
         st.divider()
 
+        # 3 BANNERS DE AFILIACIÓN (Vista exacta a tu captura)
+        st.markdown(
+            f"""
+            <div class="affiliate-grid">
+                <div class="aff-card aff-card-1">
+                    <div>
+                        <div class="aff-title">Generador de Contenido IA</div>
+                        <div class="aff-desc">Crea artículos completos de 1.500 palabras optimizados para SEO en 30 segundos.</div>
+                    </div>
+                    <a href="{URL_AFILIADO_IA_WRITING}" target="_blank" class="aff-btn aff-btn-1">Probar Generador IA →</a>
+                </div>
+                <div class="aff-card aff-card-2">
+                    <div>
+                        <div class="aff-title">Corrector & Paráfrasis</div>
+                        <div class="aff-desc">Reescribe oraciones, elimina plagio y mejora la fluidez gramatical.</div>
+                    </div>
+                    <a href="{URL_AFILIADO_PARAPHRASE}" target="_blank" class="aff-btn aff-btn-2">Reescribir Texto →</a>
+                </div>
+                <div class="aff-card aff-card-3">
+                    <div>
+                        <div class="aff-title">Auditoría SEO Avanzada</div>
+                        <div class="aff-desc">Analiza tu escrito frente al top 10 de Google para asegurar el primer puesto.</div>
+                    </div>
+                    <a href="{URL_AFILIADO_SEO_TOOL}" target="_blank" class="aff-btn aff-btn-3">Auditar para Google →</a>
+                </div>
+            </div>
+        """,
+            unsafe_allow_html=True,
+        )
+
         # SECCIÓN 1: MÉTRICAS BÁSICAS
-        st.subheader("📊 1. Conteo de Extensión y Lectura")
-        st.markdown('<div class="section-explanation">Métricas esenciales para evaluar la longitud del texto frente a los requisitos de tu blog, universidad o red social.</div>', unsafe_allow_html=True)
-        
+        st.subheader("1. Conteo de Extensión y Lectura")
+        st.markdown(
+            '<div class="section-explanation">Métricas esenciales para evaluar la longitud del texto frente a los requisitos de tu blog, universidad o red social.</div>',
+            unsafe_allow_html=True,
+        )
+
         col1, col2, col3, col4, col5 = st.columns(5)
-        col1.markdown(f'<div class="metric-card"><div class="metric-value">{total_words}</div><div class="metric-label">Palabras</div></div>', unsafe_allow_html=True)
-        col2.metric_card = col2.markdown(f'<div class="metric-card"><div class="metric-value">{total_chars}</div><div class="metric-label">Caracteres</div></div>', unsafe_allow_html=True)
-        col3.markdown(f'<div class="metric-card"><div class="metric-value">{total_chars_no_spaces}</div><div class="metric-label">Sin Espacios</div></div>', unsafe_allow_html=True)
-        col4.markdown(f'<div class="metric-card"><div class="metric-value">{sentences}</div><div class="metric-label">Oraciones</div></div>', unsafe_allow_html=True)
-        col5.markdown(f'<div class="metric-card"><div class="metric-value">~{reading_time} min</div><div class="metric-label">Tiempo Lectura</div></div>', unsafe_allow_html=True)
+        col1.markdown(
+            f'<div class="metric-card"><div class="metric-value">{total_words}</div><div class="metric-label">Palabras</div></div>',
+            unsafe_allow_html=True,
+        )
+        col2.markdown(
+            f'<div class="metric-card"><div class="metric-value">{total_chars}</div><div class="metric-label">Caracteres</div></div>',
+            unsafe_allow_html=True,
+        )
+        col3.markdown(
+            f'<div class="metric-card"><div class="metric-value">{total_chars_no_spaces}</div><div class="metric-label">Sin Espacios</div></div>',
+            unsafe_allow_html=True,
+        )
+        col4.markdown(
+            f'<div class="metric-card"><div class="metric-value">{sentences}</div><div class="metric-label">Oraciones</div></div>',
+            unsafe_allow_html=True,
+        )
+        col5.markdown(
+            f'<div class="metric-card"><div class="metric-value">~{reading_time} min</div><div class="metric-label">Tiempo Lectura</div></div>',
+            unsafe_allow_html=True,
+        )
 
         st.divider()
 
         # SECCIÓN 2: DENSIDAD SEO
-        st.subheader("🎯 2. Palabras Clave y Densidad SEO")
-        st.markdown('<div class="section-explanation">Muestra las palabras más repetidas excluyendo conectores. Para un buen SEO, la palabra clave principal debe rondar entre el 1% y el 3% de densidad.</div>', unsafe_allow_html=True)
-        
-        filtered_words = [w for w in words if w not in STOP_WORDS_ES and len(w) > 2]
+        st.subheader("2. Palabras Clave y Densidad SEO")
+        st.markdown(
+            '<div class="section-explanation">Muestra las palabras más repetidas excluyendo conectores. Para un buen SEO, la palabra clave principal debe rondar entre el 1% y el 3% de densidad.</div>',
+            unsafe_allow_html=True,
+        )
+
+        filtered_words = [
+            w for w in words if w not in STOP_WORDS_ES and len(w) > 2
+        ]
         if filtered_words:
             counter = Counter(filtered_words)
             top_words = counter.most_common(8)
@@ -256,7 +407,7 @@ if btn_revisar:
                 density = round((count / total_words) * 100, 2)
                 cols[idx % 4].markdown(
                     f'<div class="metric-card"><b>{word.capitalize()}</b><br><span style="color:#64748b; font-size:0.85rem;">{count} veces ({density}%)</span></div>',
-                    unsafe_allow_html=True
+                    unsafe_allow_html=True,
                 )
         else:
             st.info("Introduce un texto más extenso para analizar la densidad.")
@@ -264,62 +415,106 @@ if btn_revisar:
         st.divider()
 
         # SECCIÓN 3: LEGIBILIDAD Y ESTILO
-        st.subheader("📖 3. Análisis de Legibilidad y Estilo")
-        st.markdown('<div class="section-explanation">Evalúa la fluidez de lectura. Las oraciones cortas (menos de 20 palabras) mejoran la retención del usuario y favorecen el posicionamiento móvil.</div>', unsafe_allow_html=True)
-        
-        avg_words_per_sentence = round(total_words / sentences, 1) if sentences > 0 else 0
+        st.subheader("3. Análisis de Legibilidad y Estilo")
+        st.markdown(
+            '<div class="section-explanation">Evalúa la fluidez de lectura. Las oraciones cortas (menos de 20 palabras) mejoran la retención del usuario y favorecen el posicionamiento móvil.</div>',
+            unsafe_allow_html=True,
+        )
+
+        avg_words_per_sentence = (
+            round(total_words / sentences, 1) if sentences > 0 else 0
+        )
         col_l1, col_l2 = st.columns(2)
         with col_l1:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{avg_words_per_sentence}</div><div class="metric-label">Palabras por Oración (Promedio)</div></div>', unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="metric-card"><div class="metric-value">{avg_words_per_sentence}</div><div class="metric-label">Palabras por Oración (Promedio)</div></div>',
+                unsafe_allow_html=True,
+            )
         with col_l2:
             if avg_words_per_sentence <= 15:
-                st.success("🟢 **Lectura Fluida:** Frases breves y fáciles de digerir. Excelente para lectura en smartphones.")
+                st.success(
+                    "Lectura Fluida: Frases breves y fáciles de digerir. Excelente para lectura en smartphones."
+                )
             elif avg_words_per_sentence <= 24:
-                st.warning("🟡 **Dificultad Media:** Estructura aceptable, aunque se recomienda acortar los párrafos más densos.")
+                st.warning(
+                    "Dificultad Media: Estructura aceptable, aunque se recomienda acortar los párrafos más densos."
+                )
             else:
-                st.error("🔴 **Complejo:** Oraciones demasiado largas. Divídelas con puntos seguidos para evitar rebote de usuarios.")
+                st.error(
+                    "Complejo: Oraciones demasiado largas. Divídelas con puntos seguidos para evitar rebote de usuarios."
+                )
 
         st.divider()
 
         # SECCIÓN 4: META DESCRIPCIÓN
-        st.subheader("🏷️ 4. Generador de Meta Descripción")
-        st.markdown('<div class="section-explanation">Extracto sugerido para la etiqueta meta en Google. Debe tener entre 130 y 160 caracteres para no ser cortada en los resultados de búsqueda.</div>', unsafe_allow_html=True)
-        
+        st.subheader("4. Generador de Meta Descripción")
+        st.markdown(
+            '<div class="section-explanation">Extracto sugerido para la etiqueta meta en Google. Debe tener entre 130 y 160 caracteres para no ser cortada en los resultados de búsqueda.</div>',
+            unsafe_allow_html=True,
+        )
+
         raw_snippet = text_input.replace("\n", " ").strip()
-        meta_desc = raw_snippet[:155].rsplit(' ', 1)[0] + "..." if len(raw_snippet) > 155 else raw_snippet
+        meta_desc = (
+            raw_snippet[:155].rsplit(" ", 1)[0] + "..."
+            if len(raw_snippet) > 155
+            else raw_snippet
+        )
         st.text_area("Snippet listo para copiar:", meta_desc, height=75)
         length_meta = len(meta_desc)
         if 130 <= length_meta <= 160:
-            st.caption(f"✅ Longitud ideal: **{length_meta} caracteres**.")
+            st.caption(
+                f"Longitud ideal: **{length_meta} caracteres** (Encaja perfectamente en Google)."
+            )
         else:
-            st.caption(f"ℹ️ Longitud actual: **{length_meta} caracteres** (Recomendado entre 130 y 160).")
+            st.caption(
+                f"Longitud actual: **{length_meta} caracteres** (Recomendado entre 130 y 160)."
+            )
 
         st.divider()
 
-        # SECCIÓN 5: FORMATEADOR RÁPIDO
-        st.subheader("🔄 5. Formateador de Texto")
-        st.markdown('<div class="section-explanation">Herramienta rápida para corregir problemas de capitalización o espacios dobles copiados desde documentos externos.</div>', unsafe_allow_html=True)
-        
+        # SECCIÓN 5: FORMATEADOR RÁPIDO (Con cuadro único resultante justo debajo)
+        st.subheader("5. Formateador de Texto")
+        st.markdown(
+            '<div class="section-explanation">Herramienta rápida para corregir problemas de mayúsculas, minúsculas o espacios dobles copiados desde documentos externos.</div>',
+            unsafe_allow_html=True,
+        )
+
         col_btn1, col_btn2, col_btn3, col_btn4 = st.columns(4)
-        if col_btn1.button("Convertir a MAYÚSCULAS", use_container_width=True):
-            st.text_area("Resultado", text_input.upper(), height=100)
-        if col_btn2.button("Convertir a minúsculas", use_container_width=True):
-            st.text_area("Resultado", text_input.lower(), height=100)
+
+        if col_btn1.button("MAYÚSCULAS", use_container_width=True):
+            st.session_state.formatted_output = text_input.upper()
+        if col_btn2.button("minúsculas", use_container_width=True):
+            st.session_state.formatted_output = text_input.lower()
         if col_btn3.button("Modo Título", use_container_width=True):
-            st.text_area("Resultado", text_input.title(), height=100)
-        if col_btn4.button("Limpiar Espacios Dobles", use_container_width=True):
-            st.text_area("Resultado", " ".join(text_input.split()), height=100)
+            st.session_state.formatted_output = text_input.title()
+        if col_btn4.button("Limpiar Espacios", use_container_width=True):
+            st.session_state.formatted_output = " ".join(text_input.split())
+
+        # Cuadro único resultante justo debajo de los botones
+        if st.session_state.formatted_output:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.text_area(
+                "Resultado formateado:",
+                st.session_state.formatted_output,
+                height=130,
+            )
 
         st.divider()
 
         # SECCIÓN 6: SLUG URL
-        st.subheader("🔗 6. Generador de Slug para URL")
-        st.markdown('<div class="section-explanation">Transforma el título de tu artículo en una dirección web limpia sin caracteres especiales ni tildes.</div>', unsafe_allow_html=True)
-        
+        st.subheader("6. Generador de Slug para URL")
+        st.markdown(
+            '<div class="section-explanation">Transforma el título de tu artículo en una dirección web limpia sin caracteres especiales ni tildes.</div>',
+            unsafe_allow_html=True,
+        )
+
         raw_slug = text_input.split("\n")[0]
-        slug = re.sub(r'[^\w\s-]', '', raw_slug.lower())
-        slug = re.sub(r'[-\s]+', '-', slug).strip('-')
-        st.code(slug if slug else "escribe-un-titulo-para-generar-el-slug", language="text")
+        slug = re.sub(r"[^\w\s-]", "", raw_slug.lower())
+        slug = re.sub(r"[-\s]+", "-", slug).strip("-")
+        st.code(
+            slug if slug else "escribe-un-titulo-para-generar-el-slug",
+            language="text",
+        )
 
 st.markdown(
     """
