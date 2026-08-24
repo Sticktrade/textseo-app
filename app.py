@@ -3,12 +3,18 @@ from collections import Counter
 import streamlit as st
 import streamlit.components.v1 as components
 
-# Configuración visual
+# Configuración visual (Configuración inicial)
 st.set_page_config(
     page_title="TextSEO — Contador, Densidad SEO, Legibilidad y Meta Descripción",
     page_icon="📝",
     layout="wide",
     initial_sidebar_state="collapsed",
+)
+
+# Verificación de Google Search Console
+st.markdown(
+    '<meta name="google-site-verification" content="G4odXAA-Rr8oWtOUstBE5wPZvfLr5dZFX3RXBtUSdrc" />',
+    unsafe_allow_html=True,
 )
 
 # Inicializar estados de sesión
@@ -206,7 +212,7 @@ text_input = st.text_area(
     label_visibility="collapsed",
 )
 
-# BANNERS DE AFILIACIÓN (Ubicados antes del botón de Revisar)
+# BANNERS DE AFILIACIÓN
 st.markdown(
     f"""
     <div class="affiliate-grid">
@@ -236,7 +242,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Botón centrado en la pantalla
+# Botón centrado
 col_b1, col_b2, col_b3 = st.columns([1, 1, 1])
 with col_b2:
     if st.button("Revisar Texto", type="primary", use_container_width=True):
@@ -257,7 +263,7 @@ STOP_WORDS_ES = set([
     "algo", "nosotros"
 ])
 
-# RENDERIZADO DE RESULTADOS (Permanece activo)
+# Renderizado de resultados
 if st.session_state.reviewed and text_input.strip():
     words = re.findall(r"\b\w+\b", text_input.lower())
     total_words = len(words)
@@ -358,7 +364,7 @@ if st.session_state.reviewed and text_input.strip():
 
     st.divider()
 
-    # SECCIÓN 4: META DESCRIPCIÓN (Mejorada sin recortes bruscos)
+    # SECCIÓN 4: META DESCRIPCIÓN
     st.subheader("4. Generador de Meta Descripción")
     st.markdown(
         '<div class="section-explanation">Extracto sugerido para la etiqueta meta en Google. Estructura oraciones completas de hasta 160 caracteres sin cortar palabras.</div>',
@@ -418,7 +424,7 @@ if st.session_state.reviewed and text_input.strip():
         st.session_state.formatted_output = " ".join(text_input.split())
         st.session_state.scroll_target = "formatter-anchor"
 
-    # Cuadro único justo debajo
+    # Cuadro único formateado
     if st.session_state.formatted_output:
         st.markdown("<br>", unsafe_allow_html=True)
         st.text_area(
@@ -444,7 +450,7 @@ if st.session_state.reviewed and text_input.strip():
         language="text",
     )
 
-    # Control de desplazamiento suave automático
+    # Autodesplazamiento
     if st.session_state.scroll_target:
         target_id = st.session_state.scroll_target
         st.session_state.scroll_target = None
