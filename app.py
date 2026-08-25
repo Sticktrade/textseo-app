@@ -11,15 +11,31 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Integración real de Google Analytics 4 (ejecutado en iframe nativo)
+# Inyección directa de Google Analytics 4 en la cabecera principal
 components.html(
     """
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DZCRWL55RY', { 'send_page_view': true });
+        const parentDoc = window.parent.document;
+        if (!parentDoc.getElementById('ga-gtag-script')) {
+            // Cargar archivo principal de Google
+            const script1 = parentDoc.createElement('script');
+            script1.id = 'ga-gtag-script';
+            script1.async = true;
+            script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY';
+            parentDoc.head.appendChild(script1);
+
+            // Inicializar medición con la URL completa de tu app
+            const script2 = parentDoc.createElement('script');
+            script2.innerHTML = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-DZCRWL55RY', {
+                    'page_location': window.parent.location.href
+                });
+            `;
+            parentDoc.head.appendChild(script2);
+        }
     </script>
 """,
     height=0,
