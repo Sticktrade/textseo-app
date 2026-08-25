@@ -5,18 +5,19 @@ import streamlit.components.v1 as components
 
 # Configuración visual (Configuración inicial)
 st.set_page_config(
-    page_title="TextSEO — Contador, Densidad SEO, Legibilidad y Meta Descripción",
-    page_icon="📝",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
-
-# Verificación de Google Search Console
+    # Código de seguimiento Google Analytics 4
 st.markdown(
-    '<meta name="google-site-verification" content="G4odXAA-Rr8oWtOUstBE5wPZvfLr5dZFX3RXBtUSdrc" />',
+    """
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DZCRWL55RY');
+    </script>
+""",
     unsafe_allow_html=True,
 )
-
 # Inicializar estados de sesión
 if "reviewed" not in st.session_state:
     st.session_state.reviewed = False
