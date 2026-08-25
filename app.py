@@ -3,11 +3,18 @@ from collections import Counter
 import streamlit as st
 import streamlit.components.v1 as components
 
-# Configuración visual (Configuración inicial)
+# Configuración visual
 st.set_page_config(
-    # Código de seguimiento Google Analytics 4
+    page_title="TextSEO — Contador, Densidad SEO, Legibilidad y Meta Descripción",
+    page_icon="📝",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# Integración: Google Search Console + Google Analytics 4
 st.markdown(
     """
+    <meta name="google-site-verification" content="G4odXAA-Rr8oWtOUstBE5wPZvfLr5dZFX3RXBtUSdrc" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -18,6 +25,7 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
+
 # Inicializar estados de sesión
 if "reviewed" not in st.session_state:
     st.session_state.reviewed = False
@@ -92,7 +100,6 @@ st.markdown(
         box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
     }
 
-    /* Estilo de botones */
     div[data-testid="stButton"] button {
         background-color: #ffffff !important;
         color: #0f172a !important;
@@ -109,7 +116,6 @@ st.markdown(
         color: #2563eb !important;
     }
 
-    /* Botón principal "Revisar" */
     div[data-testid="stButton"] button[kind="primary"] {
         background-color: #2563eb !important;
         color: #ffffff !important;
@@ -121,7 +127,6 @@ st.markdown(
         color: #ffffff !important;
     }
 
-    /* Grid de 3 Banners de Afiliación */
     .affiliate-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -152,7 +157,6 @@ st.markdown(
     .aff-btn-2 { background-color: #ecfdf5; color: #059669 !important; border: 1px solid #a7f3d0; }
     .aff-btn-3 { background-color: #fffbeb; color: #d97706 !important; border: 1px solid #fde68a; }
 
-    /* Tarjetas de métricas */
     .metric-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
