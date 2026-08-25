@@ -11,19 +11,18 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Integración: Google Search Console + Google Analytics 4
-st.markdown(
+# Integración real de Google Analytics 4 (ejecutado en iframe nativo)
+components.html(
     """
-    <meta name="google-site-verification" content="G4odXAA-Rr8oWtOUstBE5wPZvfLr5dZFX3RXBtUSdrc" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-DZCRWL55RY');
+      gtag('config', 'G-DZCRWL55RY', { 'send_page_view': true });
     </script>
 """,
-    unsafe_allow_html=True,
+    height=0,
 )
 
 # Inicializar estados de sesión
