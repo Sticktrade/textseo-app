@@ -11,20 +11,18 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Inyección directa de Google Analytics 4 en la cabecera principal
+# Integración directa de Google Analytics 4 en la cabecera principal
 components.html(
     """
     <script>
         const parentDoc = window.parent.document;
         if (!parentDoc.getElementById('ga-gtag-script')) {
-            // Cargar archivo principal de Google
             const script1 = parentDoc.createElement('script');
             script1.id = 'ga-gtag-script';
             script1.async = true;
             script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-DZCRWL55RY';
             parentDoc.head.appendChild(script1);
 
-            // Inicializar medición con la URL completa de tu app
             const script2 = parentDoc.createElement('script');
             script2.innerHTML = `
                 window.dataLayer = window.dataLayer || [];
@@ -49,10 +47,12 @@ if "formatted_output" not in st.session_state:
 if "scroll_target" not in st.session_state:
     st.session_state.scroll_target = None
 
-# Enlaces de afiliados
-URL_AFILIADO_IA_WRITING = "https://writesonic.com?via=tu_id"
-URL_AFILIADO_PARAPHRASE = "https://quillbot.com?via=tu_id"
-URL_AFILIADO_SEO_TOOL = "https://surferseo.com?via=tu_id"
+# Enlaces de afiliados (Actualizados)
+URL_AFILIADO_IA_WRITING = (
+    "https://writesonic.com?via=tu_id"  # Pendiente de aprobación
+)
+URL_AFILIADO_PARAPHRASE = "https://try.quillbot.com/9dve74wqktqq"
+URL_AFILIADO_SEO_TOOL = "https://mangools.com#a6a8ff7a26aee08597788025e"
 
 # Estilos CSS
 st.markdown(
@@ -115,6 +115,7 @@ st.markdown(
         box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
     }
 
+    /* Estilo de botones */
     div[data-testid="stButton"] button {
         background-color: #ffffff !important;
         color: #0f172a !important;
@@ -131,6 +132,7 @@ st.markdown(
         color: #2563eb !important;
     }
 
+    /* Botón principal "Revisar" */
     div[data-testid="stButton"] button[kind="primary"] {
         background-color: #2563eb !important;
         color: #ffffff !important;
@@ -142,6 +144,7 @@ st.markdown(
         color: #ffffff !important;
     }
 
+    /* Grid de 3 Banners de Afiliación */
     .affiliate-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -172,6 +175,7 @@ st.markdown(
     .aff-btn-2 { background-color: #ecfdf5; color: #059669 !important; border: 1px solid #a7f3d0; }
     .aff-btn-3 { background-color: #fffbeb; color: #d97706 !important; border: 1px solid #fde68a; }
 
+    /* Tarjetas de métricas */
     .metric-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
@@ -232,7 +236,7 @@ text_input = st.text_area(
     label_visibility="collapsed",
 )
 
-# BANNERS DE AFILIACIÓN
+# BANNERS DE AFILIACIÓN (Con links y textos actualizados)
 st.markdown(
     f"""
     <div class="affiliate-grid">
@@ -252,10 +256,10 @@ st.markdown(
         </div>
         <div class="aff-card aff-card-3">
             <div>
-                <div class="aff-title">Auditoría SEO Avanzada</div>
-                <div class="aff-desc">Analiza tu escrito frente al top 10 de Google para asegurar el primer puesto.</div>
+                <div class="aff-title">Análisis SEO & Keywords</div>
+                <div class="aff-desc">Encuentra palabras clave fáciles de posicionar y analiza a tus competidores en Google.</div>
             </div>
-            <a href="{URL_AFILIADO_SEO_TOOL}" target="_blank" class="aff-btn aff-btn-3">Auditar para Google →</a>
+            <a href="{URL_AFILIADO_SEO_TOOL}" target="_blank" class="aff-btn aff-btn-3">Investigar Keywords →</a>
         </div>
     </div>
 """,
@@ -274,13 +278,91 @@ with col_b2:
             st.session_state.scroll_target = "resultados-anchor"
 
 STOP_WORDS_ES = set([
-    "de", "la", "que", "el", "en", "y", "a", "los", "del", "se", "las", "por", "un", "para", "con", "no", "una",
-    "su", "al", "lo", "como", "más", "pero", "sus", "le", "ya", "o", "este", "sí", "porque", "esta", "son",
-    "entre", "está", "cuando", "muy", "sin", "sobre", "también", "me", "hasta", "hay", "donde", "quien",
-    "desde", "todo", "nos", "durante", "todos", "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante",
-    "ellos", "e", "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro", "otras", "otra", "él", "tanto",
-    "esa", "estos", "mucho", "quienes", "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas",
-    "algo", "nosotros"
+    "de",
+    "la",
+    "que",
+    "el",
+    "en",
+    "y",
+    "a",
+    "los",
+    "del",
+    "se",
+    "las",
+    "por",
+    "un",
+    "para",
+    "con",
+    "no",
+    "una",
+    "su",
+    "al",
+    "lo",
+    "como",
+    "más",
+    "pero",
+    "sus",
+    "le",
+    "ya",
+    "o",
+    "este",
+    "sí",
+    "porque",
+    "esta",
+    "son",
+    "entre",
+    "está",
+    "cuando",
+    "muy",
+    "sin",
+    "sobre",
+    "también",
+    "me",
+    "hasta",
+    "hay",
+    "donde",
+    "quien",
+    "desde",
+    "todo",
+    "nos",
+    "durante",
+    "todos",
+    "uno",
+    "les",
+    "ni",
+    "contra",
+    "otros",
+    "ese",
+    "eso",
+    "ante",
+    "ellos",
+    "e",
+    "esto",
+    "mí",
+    "antes",
+    "algunos",
+    "qué",
+    "unos",
+    "yo",
+    "otro",
+    "otras",
+    "otra",
+    "él",
+    "tanto",
+    "esa",
+    "estos",
+    "mucho",
+    "quienes",
+    "nada",
+    "muchos",
+    "cual",
+    "poco",
+    "ella",
+    "estar",
+    "estas",
+    "algunas",
+    "algo",
+    "nosotros",
 ])
 
 # Renderizado de resultados
